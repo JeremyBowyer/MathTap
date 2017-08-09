@@ -17,8 +17,8 @@ public class Equation {
             ops = new ArrayList<String>(Arrays.asList("+", "-"));
             int opIndex = r.nextInt(ops.size());
             String op = ops.get(opIndex);
-            int num1 = r.nextInt(100 - 0);
-            int num2 = r.nextInt(100 - 0);
+            int num1 = r.nextInt(101);
+            int num2 = r.nextInt(101);
 
             switch (op) {
                 case "+":

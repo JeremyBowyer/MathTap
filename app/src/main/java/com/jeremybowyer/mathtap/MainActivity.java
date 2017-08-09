@@ -7,13 +7,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
-import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,7 +38,8 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.answer8) Button mAnswer8;
     @BindView(R.id.answer9) Button mAnswer9;
 
-    @BindView(R.id.bonusPointsView) TextView mBonusPoints;
+    @BindView(R.id.totalPointsView) TextView mTotalPointsView;
+    @BindView(R.id.bonusPointsView) TextView mBonusPointsView;
 
     @BindView(R.id.heart1) ImageView mHeart1;
     @BindView(R.id.heart2) ImageView mHeart2;
@@ -109,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         mHitPoints--;
     }
 
-    CountDownTimer removeButtonsClock = new CountDownTimer(16100, 2000) {
+    CountDownTimer removeButtonsClock = new CountDownTimer(19000, 2000) {
         boolean firstTick = true;
         @Override
         public void onTick(long millisUntilFinished) {
@@ -128,14 +127,14 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    CountDownTimer startClock = new CountDownTimer(16000, 100) {
+    CountDownTimer startClock = new CountDownTimer(18000, 100) {
 
         public void onTick(long millisUntilFinished) {
-            mBonusPoints.setText("+" + Math.round((millisUntilFinished)) / 16);
+            mBonusPointsView.setText("" + Math.round((millisUntilFinished)) / 18);
         }
 
         public void onFinish() {
-            mBonusPoints.setText("+0"); // In case rounding results in a number > 0
+            mBonusPointsView.setText("0"); // In case rounding results in a number > 0
             endGame();
         }
 
@@ -149,6 +148,9 @@ public class MainActivity extends AppCompatActivity {
 
             if(mEquation.isAnswer(answer)) {
                 Log.v(TAG, "Great job, idiot");
+                mTotalPoints += Integer.parseInt(mBonusPointsView.getText().toString());
+                mTotalPointsView.setText(Integer.toString(mTotalPoints));
+                mBonusPointsView.setText("0");
                 startClock.cancel();
                 removeButtonsClock.cancel();
             } else {
