@@ -29,8 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Button> mButtons = new ArrayList<>();
     private ArrayList<Button> mWrongButtons;
     private Equation mEquation;
-
-    Animation mWrongButtonAnim = AnimationUtils.loadAnimation(this, R.anim.wrong_button);
+    private Animation mWrongButtonAnim;
 
     @BindView(R.id.equationView) TextView mEquationView;
 
@@ -60,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         mEquation = new Equation(1);
         mEquationView.setText(mEquation.getEquation());
 
+        mWrongButtonAnim = AnimationUtils.loadAnimation(this, R.anim.wrong_button);
         mWrongButtonAnim.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
