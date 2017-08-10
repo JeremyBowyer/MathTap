@@ -1,5 +1,6 @@
 package com.jeremybowyer.mathtap;
 
+import android.animation.AnimatorSet;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,8 +19,6 @@ import java.util.Random;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static android.R.attr.animation;
-
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = MainActivity.class.getSimpleName();
@@ -29,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Button> mButtons = new ArrayList<>();
     private ArrayList<Button> mWrongButtons;
     private Equation mEquation;
-    private Animation mWrongButtonAnim;
 
     @BindView(R.id.equationView) TextView mEquationView;
 
@@ -58,24 +56,6 @@ public class MainActivity extends AppCompatActivity {
 
         mEquation = new Equation(1);
         mEquationView.setText(mEquation.getEquation());
-
-        mWrongButtonAnim = AnimationUtils.loadAnimation(this, R.anim.wrong_button);
-        mWrongButtonAnim.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                Log.v(TAG, "It worked.");
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
 
         mTotalPoints = 0;
         mHitPoints = 3;
@@ -117,16 +97,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void wrongGuess(Button button) {
-        button.startAnimation(AnimationUtils.loadAnimation(this, R.anim.wrong_button));
+        Animation wrongButtonAnim = getButtonAnimation(button);
+        button.startAnimation(wrongButtonAnim);
         switch (mHitPoints) {
             case 1:
-                mHeart3.startAnimation(AnimationUtils.loadAnimation(this, R.anim.wrong_button));
+                mHeart3.setVisibility(View.INVISIBLE);
                 break;
             case 2:
-                mHeart2.startAnimation(AnimationUtils.loadAnimation(this, R.anim.wrong_button));
+                mHeart2.setVisibility(View.INVISIBLE);
                 break;
             case 3:
-                mHeart1.startAnimation(AnimationUtils.loadAnimation(this, R.anim.wrong_button));
+                mHeart1.setVisibility(View.INVISIBLE);
                 break;
         }
         mHitPoints--;
@@ -140,7 +121,8 @@ public class MainActivity extends AppCompatActivity {
                 cancel();
             } else if (!firstTick) {
                 final Button button = mWrongButtons.remove(0);
-                button.startAnimation(mWrongButtonAnim);
+                Animation wrongButtonAnim = getButtonAnimation(button);
+                button.startAnimation(wrongButtonAnim);
             }
             firstTick = false;
         }
@@ -182,6 +164,22 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
+
+    private Animation getButtonAnimation(Button button) {
+        AnimationListenerHide buttonListener = new AnimationListenerHide();
+        buttonListener.setView(button);
+        Animation wrongButtonAnim = AnimationUtils.loadAnimation(this, R.anim.wrong_button);
+        wrongButtonAnim.setAnimationListener(buttonListener);
+        return wrongButtonAnim;
+    }
+
+    private Animation getHeartAnimation(ImageView heart) {
+        AnimationListenerHide heartListener = new AnimationListenerHide();
+        heartListener.setView(heart);
+        Animation removeHeartAnim = AnimationUtils.loadAnimation(this, R.anim.remove_heart);
+        removeHeartAnim.setAnimationListener(heartListener);
+        return removeHeartAnim;
+    }
 
     private void endGame() {
         mHeart1.setVisibility(View.INVISIBLE);
