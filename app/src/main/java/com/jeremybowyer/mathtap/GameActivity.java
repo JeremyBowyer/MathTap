@@ -27,8 +27,7 @@ public class GameActivity extends AppCompatActivity {
     private ArrayList<Button> mWrongButtons;
     private Equation mEquation;
 
-    @BindView(R.id.equationView)
-    TextView mEquationView;
+    @BindView(R.id.equationView) TextView mEquationView;
 
     @BindView(R.id.answer1) Button mAnswer1;
     @BindView(R.id.answer2) Button mAnswer2;
@@ -43,8 +42,7 @@ public class GameActivity extends AppCompatActivity {
     @BindView(R.id.totalPointsView) TextView mTotalPointsView;
     @BindView(R.id.bonusPointsView) TextView mBonusPointsView;
 
-    @BindView(R.id.heart1)
-    ImageView mHeart1;
+    @BindView(R.id.heart1) ImageView mHeart1;
     @BindView(R.id.heart2) ImageView mHeart2;
     @BindView(R.id.heart3) ImageView mHeart3;
 
@@ -53,9 +51,6 @@ public class GameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         ButterKnife.bind(this);
-
-        mEquation = new Equation(1);
-        mEquationView.setText(mEquation.getEquation());
 
         mButtons.add(mAnswer1);
         mButtons.add(mAnswer2);
@@ -69,10 +64,8 @@ public class GameActivity extends AppCompatActivity {
         for (Button button: mButtons) {
             button.setOnClickListener(guessButton);
         }
-        mWrongButtons = setButtons(mButtons, mEquation);
-        startClock.start();
-        Collections.shuffle(mWrongButtons);
-        removeButtonsClock.start();
+
+        startGame();
 
     }
 
@@ -180,12 +173,24 @@ public class GameActivity extends AppCompatActivity {
         return removeHeartAnim;
     }
 
+    private void startGame() {
+        mEquation = new Equation(1);
+        mEquationView.setText(mEquation.getEquation());
+        for(Button button: mButtons){
+            button.setVisibility(View.VISIBLE);
+        }
+        mWrongButtons = setButtons(mButtons, mEquation);
+        startClock.start();
+        Collections.shuffle(mWrongButtons);
+        removeButtonsClock.start();
+    }
+
     private void nextRound() {
         mHitPoints = 3;
         mHeart1.setVisibility(View.VISIBLE);
         mHeart2.setVisibility(View.VISIBLE);
         mHeart3.setVisibility(View.VISIBLE);
-        recreate();
+        startGame();
     }
 
     private void endGame() {
