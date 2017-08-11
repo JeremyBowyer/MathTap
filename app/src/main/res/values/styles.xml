@@ -8,4 +8,10 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="HiddenView">
+        <item name="android:visibility">invisible</item>
+        <item name="android:scaleX">0</item>
+        <item name="android:scaleY">0</item>
+        <item name="android:alpha">0</item>
+    </style>
 </resources>

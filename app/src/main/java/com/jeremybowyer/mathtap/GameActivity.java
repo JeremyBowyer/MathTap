@@ -29,6 +29,8 @@ public class GameActivity extends AppCompatActivity {
 
     @BindView(R.id.equationView) TextView mEquationView;
 
+    @BindView(R.id.countdownView) TextView mCountdownView;
+
     @BindView(R.id.answer1) Button mAnswer1;
     @BindView(R.id.answer2) Button mAnswer2;
     @BindView(R.id.answer3) Button mAnswer3;
@@ -83,12 +85,19 @@ public class GameActivity extends AppCompatActivity {
         for(Button button: buttonsClone) {
             button.setText(equation.getWrongAnswer());
         }
+
+        // Set load button animation
+        for(Button button: buttons) {
+            Animation loadButtonAnim = getViewAnimation(button, R.anim.button_appear, false);
+            button.startAnimation(loadButtonAnim);
+        }
+
         return buttonsClone;
     }
 
     private void wrongGuess(Button button) {
         mWrongButtons.remove(button); // ensure button isn't selected during countdown
-        Animation wrongButtonAnim = getButtonAnimation(button);
+        Animation wrongButtonAnim = getViewAnimation(button, R.anim.button_disappear, true);
         button.startAnimation(wrongButtonAnim);
         switch (mHitPoints) {
             case 1:
@@ -112,7 +121,7 @@ public class GameActivity extends AppCompatActivity {
                 cancel();
             } else if (!firstTick) {
                 final Button button = mWrongButtons.remove(0);
-                Animation wrongButtonAnim = getButtonAnimation(button);
+                Animation wrongButtonAnim = getViewAnimation(button, R.anim.button_disappear, true);
                 button.startAnimation(wrongButtonAnim);
             }
             firstTick = false;
@@ -157,12 +166,24 @@ public class GameActivity extends AppCompatActivity {
         }
     };
 
-    private Animation getButtonAnimation(Button button) {
-        AnimationListenerHide buttonListener = new AnimationListenerHide();
-        buttonListener.setView(button);
-        Animation wrongButtonAnim = AnimationUtils.loadAnimation(this, R.anim.wrong_button);
-        wrongButtonAnim.setAnimationListener(buttonListener);
-        return wrongButtonAnim;
+    private Animation getViewAnimation(View view, int animid, boolean hide) {
+
+        Animation viewAnim;
+
+        if (hide) {
+            AnimationListenerHide animListener = new AnimationListenerHide();
+            animListener.setView(view);
+            viewAnim = AnimationUtils.loadAnimation(this, animid);
+            viewAnim.setAnimationListener(animListener);
+        } else {
+            AnimationListenerShow buttonListener = new AnimationListenerShow();
+            buttonListener.setView(view);
+            viewAnim = AnimationUtils.loadAnimation(this, animid);
+            viewAnim.setAnimationListener(buttonListener);
+        }
+
+        return viewAnim;
+
     }
 
     private Animation getHeartAnimation(ImageView heart) {
