@@ -15,6 +15,9 @@ public class AnimationListenerShow implements Animation.AnimationListener {
     }
     public void onAnimationStart(Animation animation) {
         view.setVisibility(View.VISIBLE);
+        view.setAlpha(1);
+        view.setScaleX(1);
+        view.setScaleY(1);
     }
 }
 

@@ -1,5 +1,6 @@
 package com.jeremybowyer.mathtap;
 
+import android.content.Intent;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,6 +28,8 @@ public class GameActivity extends AppCompatActivity {
     private ArrayList<Button> mButtonsToRemove;
     private ArrayList<View> mGameViews = new ArrayList<>();
     private Equation mEquation;
+    private String mPlayerName;
+    private int mRoundsCompleted = 0;
 
     @BindView(R.id.equationView) TextView mEquationView;
 
@@ -55,6 +58,8 @@ public class GameActivity extends AppCompatActivity {
         setContentView(R.layout.activity_game);
         ButterKnife.bind(this);
 
+        Intent intent =  getIntent();
+        mPlayerName = intent.getStringExtra("name");
 
         mButtons.add(mAnswer1);
         mButtons.add(mAnswer2);
@@ -66,7 +71,7 @@ public class GameActivity extends AppCompatActivity {
         mButtons.add(mAnswer8);
         mButtons.add(mAnswer9);
 
-        startRound();
+        startNewGame();
 
     }
 
@@ -93,6 +98,10 @@ public class GameActivity extends AppCompatActivity {
     private void wrongGuess(Button button) {
         mButtonsToRemove.remove(button); // ensure button isn't selected during countdown
         removeView(button);
+        takeHit();
+    }
+
+    private void takeHit() {
         switch (mHitPoints) {
             case 1:
                 mHeart3.setVisibility(View.INVISIBLE);
@@ -115,11 +124,11 @@ public class GameActivity extends AppCompatActivity {
         view.startAnimation(removeViewAnim);
     }
 
-    CountDownTimer removeButtonsClock = new CountDownTimer(19000, 2000) {
+    CountDownTimer removeButtonsClock = new CountDownTimer(20000, 2000) {
 
         @Override
         public void onTick(long millisUntilFinished) {
-            if (mButtonsToRemove.size() == 0) {
+            if (mButtonsToRemove.size() == 1) {
                 cancel();
             } else if(millisUntilFinished < 18000){
                 final Button button = mButtonsToRemove.remove(0);
@@ -130,18 +139,18 @@ public class GameActivity extends AppCompatActivity {
 
         @Override
         public void onFinish() {
-            endGame();
         }
     };
 
-    CountDownTimer mainGameClock = new CountDownTimer(18000, 100) {
+    CountDownTimer mainGameClock = new CountDownTimer(20000, 100) {
 
         public void onTick(long millisUntilFinished) {
-            mBonusPointsView.setText("" + Math.round((millisUntilFinished)) / 18);
+            mBonusPointsView.setText("" + Math.round((millisUntilFinished)) / 20);
         }
 
         public void onFinish() {
-            mBonusPointsView.setText("0"); // In case rounding results in a number > 0
+            takeHit();
+            nextRound();
         }
 
     };
@@ -151,6 +160,8 @@ public class GameActivity extends AppCompatActivity {
         public void onTick(long millisUntilFinished) {
             if(mGameViews.size() > 0) {
                 View view = mGameViews.remove(0);
+//                Animation loadViewAnim = getViewAnimation(view, R.anim.view_appear, false);
+//                view.startAnimation(loadViewAnim);
                 view.setVisibility(View.VISIBLE);
                 view.animate().alpha(1);
                 view.animate().scaleX(1);
@@ -165,11 +176,10 @@ public class GameActivity extends AppCompatActivity {
 
     };
 
-    CountDownTimer countdownClock = new CountDownTimer(3000, 100) {
+    CountDownTimer countdownClock = new CountDownTimer(3000, 1000) {
 
         public void onTick(long millisUntilFinished) {
             if(millisUntilFinished > 2900){
-                hideViews();
                 mCountdownView.setVisibility(View.VISIBLE);
             }
 
@@ -231,36 +241,51 @@ public class GameActivity extends AppCompatActivity {
         return removeHeartAnim;
     }
 
-    private void startRound() {
-
+    private void startRound(int level) {
+        mGameViews.clear();
         mGameViews.add(mEquationView);
         for (Button button: mButtons) {
             button.setOnClickListener(guessButton);
             mGameViews.add(button);
         }
-        mEquation = new Equation(1);
+        resetStats(false);
+        clearTimers();
+        hideViews();
+        mEquation = new Equation(level);
         mEquationView.setText(mEquation.getEquation());
         mButtonsToRemove = setButtons(mButtons, mEquation);
         countdownClock.start();
     }
 
+    private void resetStats(boolean gameover) {
+        mBonusPointsView.setText("1000");
+        if(gameover){
+            mTotalPoints = 0;
+            mTotalPointsView.setText("0");
+            mHitPoints = 3;
+            mHeart1.setVisibility(View.VISIBLE);
+            mHeart2.setVisibility(View.VISIBLE);
+            mHeart3.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void startNewGame() {
+        resetStats(true);
+        startRound(1);
+    }
+
     private void nextRound() {
-        clearTimers();
-        hideViews();
-        startRound();
+        mRoundsCompleted++;
+        startRound(1); // todo: change this to load level based on score.
     }
 
     private void endGame() {
-        mTotalPoints = 0;
-        mHitPoints = 3;
-        mHeart1.setVisibility(View.VISIBLE);
-        mHeart2.setVisibility(View.VISIBLE);
-        mHeart3.setVisibility(View.VISIBLE);
-        mBonusPointsView.setText("0");
-        mTotalPointsView.setText("0");
-        clearTimers();
-        hideViews();
-        startRound();
+        Intent intent = new Intent(this, ScoreScreen.class);
+        intent.putExtra("name", mPlayerName);
+        intent.putExtra("points", Integer.toString(mTotalPoints));
+        intent.putExtra("rounds", Integer.toString(mRoundsCompleted));
+        resetStats(true);
+        startActivity(intent);
     }
 
     private void clearTimers() {
