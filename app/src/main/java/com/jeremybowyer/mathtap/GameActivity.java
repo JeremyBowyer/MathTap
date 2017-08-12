@@ -127,7 +127,6 @@ public class GameActivity extends AppCompatActivity {
 
         @Override
         public void onFinish() {
-            mEquationView.setVisibility(View.INVISIBLE);
             endGame();
         }
     };
@@ -163,19 +162,20 @@ public class GameActivity extends AppCompatActivity {
 
     };
 
-    CountDownTimer countdownClock = new CountDownTimer(3000, 1000) {
-
+    CountDownTimer countdownClock = new CountDownTimer(3000, 100) {
 
         public void onTick(long millisUntilFinished) {
             if(millisUntilFinished > 2900){
                 hideViews();
                 mCountdownView.setVisibility(View.VISIBLE);
             }
-            mCountdownView.setText("" + ( millisUntilFinished + 1000 )/ 1000);
+
+            mCountdownView.setText("" + Math.round((millisUntilFinished / 1000) + 1));
         }
 
         public void onFinish() {
             mCountdownView.setVisibility(View.INVISIBLE);
+            mCountdownView.setText("4");
             loadViewsClock.start();
         }
 
@@ -252,7 +252,10 @@ public class GameActivity extends AppCompatActivity {
         mHeart1.setVisibility(View.VISIBLE);
         mHeart2.setVisibility(View.VISIBLE);
         mHeart3.setVisibility(View.VISIBLE);
+        mBonusPointsView.setText("0");
+        mTotalPointsView.setText("0");
         clearTimers();
+        hideViews();
         startRound();
     }
 
