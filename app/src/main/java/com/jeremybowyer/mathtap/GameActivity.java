@@ -24,7 +24,8 @@ public class GameActivity extends AppCompatActivity {
     private int mTotalPoints = 0;
     private int mHitPoints = 3;
     private ArrayList<Button> mButtons = new ArrayList<>();
-    private ArrayList<Button> mWrongButtons;
+    private ArrayList<Button> mButtonsToRemove;
+    private ArrayList<View> mLoadViews = new ArrayList<>();
     private Equation mEquation;
 
     @BindView(R.id.equationView) TextView mEquationView;
@@ -54,6 +55,7 @@ public class GameActivity extends AppCompatActivity {
         setContentView(R.layout.activity_game);
         ButterKnife.bind(this);
 
+
         mButtons.add(mAnswer1);
         mButtons.add(mAnswer2);
         mButtons.add(mAnswer3);
@@ -63,9 +65,6 @@ public class GameActivity extends AppCompatActivity {
         mButtons.add(mAnswer7);
         mButtons.add(mAnswer8);
         mButtons.add(mAnswer9);
-        for (Button button: mButtons) {
-            button.setOnClickListener(guessButton);
-        }
 
         startGame();
 
@@ -86,17 +85,13 @@ public class GameActivity extends AppCompatActivity {
             button.setText(equation.getWrongAnswer());
         }
 
-        // Set load button animation
-        for(Button button: buttons) {
-            Animation loadButtonAnim = getViewAnimation(button, R.anim.button_appear, false);
-            button.startAnimation(loadButtonAnim);
-        }
-
+        Collections.shuffle(buttonsClone);
+        buttonsClone.add(correctButton);
         return buttonsClone;
     }
 
     private void wrongGuess(Button button) {
-        mWrongButtons.remove(button); // ensure button isn't selected during countdown
+        mButtons.remove(button); // ensure button isn't selected during countdown
         Animation wrongButtonAnim = getViewAnimation(button, R.anim.button_disappear, true);
         button.startAnimation(wrongButtonAnim);
         switch (mHitPoints) {
@@ -114,22 +109,22 @@ public class GameActivity extends AppCompatActivity {
     }
 
     CountDownTimer removeButtonsClock = new CountDownTimer(19000, 2000) {
-        boolean firstTick = true;
+
         @Override
         public void onTick(long millisUntilFinished) {
-            if (mWrongButtons.size() == 0) {
+            if (mButtonsToRemove.size() == 0) {
                 cancel();
-            } else if (!firstTick) {
-                final Button button = mWrongButtons.remove(0);
-                Animation wrongButtonAnim = getViewAnimation(button, R.anim.button_disappear, true);
-                button.startAnimation(wrongButtonAnim);
+            } else if(millisUntilFinished < 18000){
+                final Button button = mButtonsToRemove.remove(0);
+                Animation buttonHideAnim = getViewAnimation(button, R.anim.button_disappear, true);
+                button.startAnimation(buttonHideAnim);
             }
-            firstTick = false;
+
         }
 
         @Override
         public void onFinish() {
-
+            endGame();
         }
     };
 
@@ -141,10 +136,27 @@ public class GameActivity extends AppCompatActivity {
 
         public void onFinish() {
             mBonusPointsView.setText("0"); // In case rounding results in a number > 0
-            endGame();
         }
 
     };
+
+    CountDownTimer loadViewsClock = new CountDownTimer(1100, 100) {
+
+        public void onTick(long millisUntilFinished) {
+            if(mLoadViews.size() > 0) {
+                View view = mLoadViews.remove(0);
+                view.setVisibility(View.VISIBLE);
+                view.animate().alpha(1);
+                view.animate().scaleX(1);
+                view.animate().scaleY(1);
+            }
+        }
+
+        public void onFinish() {
+        }
+
+    };
+
 
     View.OnClickListener guessButton = new View.OnClickListener() {
         @Override
@@ -176,10 +188,10 @@ public class GameActivity extends AppCompatActivity {
             viewAnim = AnimationUtils.loadAnimation(this, animid);
             viewAnim.setAnimationListener(animListener);
         } else {
-            AnimationListenerShow buttonListener = new AnimationListenerShow();
-            buttonListener.setView(view);
+            AnimationListenerShow animListener = new AnimationListenerShow();
+            animListener.setView(view);
             viewAnim = AnimationUtils.loadAnimation(this, animid);
-            viewAnim.setAnimationListener(buttonListener);
+            viewAnim.setAnimationListener(animListener);
         }
 
         return viewAnim;
@@ -195,15 +207,19 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void startGame() {
+
+        mLoadViews.add(mEquationView);
+        for (Button button: mButtons) {
+            button.setOnClickListener(guessButton);
+            mLoadViews.add(button);
+        }
         mEquation = new Equation(1);
         mEquationView.setText(mEquation.getEquation());
-        for(Button button: mButtons){
-            button.setVisibility(View.VISIBLE);
-        }
-        mWrongButtons = setButtons(mButtons, mEquation);
+        mButtonsToRemove = setButtons(mButtons, mEquation);
+        loadViewsClock.start();
         startClock.start();
-        Collections.shuffle(mWrongButtons);
         removeButtonsClock.start();
+
     }
 
     private void nextRound() {
@@ -220,6 +236,8 @@ public class GameActivity extends AppCompatActivity {
         mHeart1.setVisibility(View.VISIBLE);
         mHeart2.setVisibility(View.VISIBLE);
         mHeart3.setVisibility(View.VISIBLE);
-        recreate();
+        startClock.cancel();
+        removeButtonsClock.cancel();
+        startGame();
     }
 }

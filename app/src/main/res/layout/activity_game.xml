@@ -9,6 +9,7 @@
                                              tools:context="com.jeremybowyer.mathtap.MainActivity">
 
     <TextView
+        style="@style/HiddenView"
         android:id="@+id/equationView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -26,6 +27,7 @@
 
 
     <Button
+        style="@style/HiddenView"
         android:id="@+id/answer1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -45,6 +47,7 @@
         tools:text="999"/>
 
     <Button
+        style="@style/HiddenView"
         android:id="@+id/answer2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -63,6 +66,7 @@
         tools:text="999"/>
 
     <Button
+        style="@style/HiddenView"
         android:id="@+id/answer3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -83,6 +87,7 @@
         tools:text="999"/>
 
     <Button
+        style="@style/HiddenView"
         android:id="@+id/answer4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -101,6 +106,7 @@
         tools:text="999"/>
 
     <Button
+        style="@style/HiddenView"
         android:id="@+id/answer5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -119,6 +125,7 @@
         tools:text="999"/>
 
     <Button
+        style="@style/HiddenView"
         android:id="@+id/answer6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -139,6 +146,7 @@
         tools:text="999"/>
 
     <Button
+        style="@style/HiddenView"
         android:id="@+id/answer7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -157,6 +165,7 @@
         tools:text="999"/>
 
     <Button
+        style="@style/HiddenView"
         android:id="@+id/answer8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -175,6 +184,7 @@
         tools:text="999"/>
 
     <Button
+        style="@style/HiddenView"
         android:id="@+id/answer9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
