@@ -11,6 +11,9 @@ public class AnimationListenerHide implements Animation.AnimationListener {
     }
     public void onAnimationEnd(Animation animation) {
         view.setVisibility(View.INVISIBLE);
+        view.setAlpha(0);
+        view.setScaleX(0);
+        view.setScaleY(0);
     }
     public void onAnimationRepeat(Animation animation) {
     }

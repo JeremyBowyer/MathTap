@@ -92,8 +92,7 @@ public class GameActivity extends AppCompatActivity {
 
     private void wrongGuess(Button button) {
         mButtonsToRemove.remove(button); // ensure button isn't selected during countdown
-        Animation wrongButtonAnim = getViewAnimation(button, R.anim.button_disappear, true);
-        button.startAnimation(wrongButtonAnim);
+        removeView(button);
         switch (mHitPoints) {
             case 1:
                 mHeart3.setVisibility(View.INVISIBLE);
@@ -111,6 +110,11 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
+    private void removeView(View view) {
+        Animation removeViewAnim = getViewAnimation(view, R.anim.view_disappear, true);
+        view.startAnimation(removeViewAnim);
+    }
+
     CountDownTimer removeButtonsClock = new CountDownTimer(19000, 2000) {
 
         @Override
@@ -119,8 +123,7 @@ public class GameActivity extends AppCompatActivity {
                 cancel();
             } else if(millisUntilFinished < 18000){
                 final Button button = mButtonsToRemove.remove(0);
-                Animation buttonHideAnim = getViewAnimation(button, R.anim.button_disappear, true);
-                button.startAnimation(buttonHideAnim);
+                removeView(button);
             }
 
         }
@@ -243,6 +246,7 @@ public class GameActivity extends AppCompatActivity {
 
     private void nextRound() {
         clearTimers();
+        hideViews();
         startRound();
     }
 
@@ -268,7 +272,7 @@ public class GameActivity extends AppCompatActivity {
 
     private void hideViews() {
         for(View view: mGameViews) {
-            view.setVisibility(View.INVISIBLE);
+            removeView(view);
         }
     }
 }
