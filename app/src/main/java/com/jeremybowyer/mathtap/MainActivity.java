@@ -15,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
 
     private String mPlayerName;
 
+    @BindView(R.id.howToPlayView) TextView mHowToPlayView;
     @BindView(R.id.playButtonView) TextView mPlayButtonView;
     @BindView(R.id.nameView) TextView mNameView;
 
@@ -29,6 +30,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startGame(mPlayerName);
+            }
+        });
+        mHowToPlayView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, HowToPlayActivity.class);
+                startActivity(intent);
             }
         });
     }
