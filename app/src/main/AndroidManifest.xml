@@ -18,13 +18,16 @@
             </intent-filter>
         </activity>
         <activity android:name=".GameActivity"
-                  android:screenOrientation="portrait">
+                  android:screenOrientation="portrait"
+                  android:noHistory="true">
         </activity>
         <activity android:name=".HowToPlayActivity"
-                  android:screenOrientation="portrait">
+                  android:screenOrientation="portrait"
+                  android:noHistory="true">
         </activity>
         <activity android:name=".ScoreScreen"
-                  android:screenOrientation="portrait">
+                  android:screenOrientation="portrait"
+                  android:noHistory="true">
         </activity>
     </application>
 

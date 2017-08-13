@@ -124,15 +124,18 @@ public class GameActivity extends AppCompatActivity {
         view.startAnimation(removeViewAnim);
     }
 
-    CountDownTimer removeButtonsClock = new CountDownTimer(20000, 2000) {
+    CountDownTimer removeButtonsClock = new CountDownTimer(22000, 2000) {
 
         @Override
         public void onTick(long millisUntilFinished) {
             if (mButtonsToRemove.size() == 1) {
-                cancel();
-            } else if(millisUntilFinished < 18000){
+                nextRound();
+            } else if(millisUntilFinished < 21500){
                 final Button button = mButtonsToRemove.remove(0);
                 removeView(button);
+                if (mButtonsToRemove.size() == 1) {
+                    takeHit();
+                }
             }
 
         }
@@ -142,15 +145,14 @@ public class GameActivity extends AppCompatActivity {
         }
     };
 
-    CountDownTimer mainGameClock = new CountDownTimer(20000, 100) {
+    CountDownTimer pointsCountdownClock = new CountDownTimer(16000, 100) {
 
         public void onTick(long millisUntilFinished) {
-            mBonusPointsView.setText("" + Math.round((millisUntilFinished)) / 20);
+            mBonusPointsView.setText("" + Math.round((millisUntilFinished)) / 16);
         }
 
         public void onFinish() {
-            takeHit();
-            nextRound();
+            mBonusPointsView.setText("0");
         }
 
     };
@@ -170,20 +172,20 @@ public class GameActivity extends AppCompatActivity {
         }
 
         public void onFinish() {
-            mainGameClock.start();
+            pointsCountdownClock.start();
             removeButtonsClock.start();
         }
 
     };
 
-    CountDownTimer countdownClock = new CountDownTimer(3000, 1000) {
+    CountDownTimer countdownClock = new CountDownTimer(4000, 1000) {
 
         public void onTick(long millisUntilFinished) {
-            if(millisUntilFinished > 2900){
+            if(millisUntilFinished > 3900){
                 mCountdownView.setVisibility(View.VISIBLE);
             }
 
-            mCountdownView.setText("" + Math.round((millisUntilFinished / 1000) + 1));
+            mCountdownView.setText("" + Math.round(millisUntilFinished / 1000));
         }
 
         public void onFinish() {
@@ -263,6 +265,7 @@ public class GameActivity extends AppCompatActivity {
             mTotalPoints = 0;
             mTotalPointsView.setText("0");
             mHitPoints = 3;
+            mRoundsCompleted = 0;
             mHeart1.setVisibility(View.VISIBLE);
             mHeart2.setVisibility(View.VISIBLE);
             mHeart3.setVisibility(View.VISIBLE);
@@ -280,6 +283,8 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void endGame() {
+        clearTimers();
+        hideViews();
         Intent intent = new Intent(this, ScoreScreen.class);
         intent.putExtra("name", mPlayerName);
         intent.putExtra("points", Integer.toString(mTotalPoints));
@@ -291,7 +296,7 @@ public class GameActivity extends AppCompatActivity {
     private void clearTimers() {
         countdownClock.cancel();
         loadViewsClock.cancel();
-        mainGameClock.cancel();
+        pointsCountdownClock.cancel();
         removeButtonsClock.cancel();
     }
 
