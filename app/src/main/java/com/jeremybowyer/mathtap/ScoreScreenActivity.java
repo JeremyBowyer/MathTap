@@ -10,7 +10,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ScoreScreen extends AppCompatActivity {
+public class ScoreScreenActivity extends AppCompatActivity {
 
     private String mPlayerName;
     private String mTotalPoints;
@@ -37,7 +37,7 @@ public class ScoreScreen extends AppCompatActivity {
         mPlayAgainButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ScoreScreen.this, MainActivity.class);
+                Intent intent = new Intent(ScoreScreenActivity.this, MainActivity.class);
                 startActivity(intent);
             }
         });

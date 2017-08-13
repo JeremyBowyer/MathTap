@@ -9,7 +9,7 @@
     android:paddingLeft="14sp"
     android:paddingRight="14sp"
     android:paddingTop="14sp"
-    tools:context="com.jeremybowyer.mathtap.ScoreScreen">
+    tools:context="com.jeremybowyer.mathtap.ScoreScreenActivity">
 
     <Button
         android:id="@+id/playAgainButtonView"

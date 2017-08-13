@@ -1,4 +1,4 @@
-package com.jeremybowyer.mathtap;
+package com.jeremybowyer.mathtap.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -12,6 +12,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.jeremybowyer.mathtap.model.AnimationListenerHide;
+import com.jeremybowyer.mathtap.model.AnimationListenerShow;
+import com.jeremybowyer.mathtap.model.Equation;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -285,7 +289,7 @@ public class GameActivity extends AppCompatActivity {
     private void endGame() {
         clearTimers();
         hideViews();
-        Intent intent = new Intent(this, ScoreScreen.class);
+        Intent intent = new Intent(this, ScoreScreenActivity.class);
         intent.putExtra("name", mPlayerName);
         intent.putExtra("points", Integer.toString(mTotalPoints));
         intent.putExtra("rounds", Integer.toString(mRoundsCompleted));

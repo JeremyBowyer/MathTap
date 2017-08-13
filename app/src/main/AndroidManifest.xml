@@ -25,7 +25,7 @@
                   android:screenOrientation="portrait"
                   android:noHistory="true">
         </activity>
-        <activity android:name=".ScoreScreen"
+        <activity android:name=".ScoreScreenActivity"
                   android:screenOrientation="portrait"
                   android:noHistory="true">
         </activity>
