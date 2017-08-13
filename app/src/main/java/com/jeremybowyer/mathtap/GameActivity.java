@@ -33,11 +33,12 @@ public class GameActivity extends AppCompatActivity {
     private ArrayList<View> mGameViews = new ArrayList<>();
     private Equation mEquation;
     private String mPlayerName;
-    private int mRoundsCompleted = 0;
+    private int mSuccessfulGuesses = 0;
 
     @BindView(R.id.equationView) TextView mEquationView;
 
     @BindView(R.id.countdownView) TextView mCountdownView;
+    @BindView(R.id.countdownTitleView) TextView mCountdownTitleView;
 
     @BindView(R.id.answer1) Button mAnswer1;
     @BindView(R.id.answer2) Button mAnswer2;
@@ -186,13 +187,16 @@ public class GameActivity extends AppCompatActivity {
 
         public void onTick(long millisUntilFinished) {
             if(millisUntilFinished > 3900){
+                mCountdownTitleView.setVisibility(View.VISIBLE);
                 mCountdownView.setVisibility(View.VISIBLE);
             }
 
             mCountdownView.setText("" + Math.round(millisUntilFinished / 1000));
+            mCountdownView.startAnimation(AnimationUtils.loadAnimation(GameActivity.this, R.anim.view_fade_out));
         }
 
         public void onFinish() {
+            mCountdownTitleView.setVisibility(View.INVISIBLE);
             mCountdownView.setVisibility(View.INVISIBLE);
             mCountdownView.setText("4");
             loadViewsClock.start();
@@ -208,7 +212,7 @@ public class GameActivity extends AppCompatActivity {
             String answer = button.getText().toString();
 
             if(mEquation.isAnswer(answer)) {
-                Log.v(TAG, "Great job, idiot");
+                mSuccessfulGuesses++;
                 mTotalPoints += Integer.parseInt(mBonusPointsView.getText().toString());
                 mTotalPointsView.setText(Integer.toString(mTotalPoints));
                 mBonusPointsView.setText("0");
@@ -254,9 +258,9 @@ public class GameActivity extends AppCompatActivity {
             button.setOnClickListener(guessButton);
             mGameViews.add(button);
         }
+        hideViews();
         resetStats(false);
         clearTimers();
-        hideViews();
         mEquation = new Equation(level);
         mEquationView.setText(mEquation.getEquation());
         mButtonsToRemove = setButtons(mButtons, mEquation);
@@ -269,7 +273,7 @@ public class GameActivity extends AppCompatActivity {
             mTotalPoints = 0;
             mTotalPointsView.setText("0");
             mHitPoints = 3;
-            mRoundsCompleted = 0;
+            mSuccessfulGuesses = 0;
             mHeart1.setVisibility(View.VISIBLE);
             mHeart2.setVisibility(View.VISIBLE);
             mHeart3.setVisibility(View.VISIBLE);
@@ -282,7 +286,6 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void nextRound() {
-        mRoundsCompleted++;
         startRound(1); // todo: change this to load level based on score.
     }
 
@@ -292,7 +295,7 @@ public class GameActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ScoreScreenActivity.class);
         intent.putExtra("name", mPlayerName);
         intent.putExtra("points", Integer.toString(mTotalPoints));
-        intent.putExtra("rounds", Integer.toString(mRoundsCompleted));
+        intent.putExtra("rounds", Integer.toString(mSuccessfulGuesses));
         resetStats(true);
         startActivity(intent);
     }
@@ -306,7 +309,8 @@ public class GameActivity extends AppCompatActivity {
 
     private void hideViews() {
         for(View view: mGameViews) {
-            removeView(view);
+            view.setVisibility(View.INVISIBLE);
+//            removeView(view);
         }
     }
 }
