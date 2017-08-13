@@ -32,6 +32,7 @@ public class HowToPlayActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(R.style.HowToTheme);
         setContentView(R.layout.activity_how_to_play);
         ButterKnife.bind(this);
 
@@ -42,8 +43,7 @@ public class HowToPlayActivity extends FragmentActivity {
         mBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(HowToPlayActivity.this, MainActivity.class);
-                startActivity(intent);
+                finish();
             }
         });
 

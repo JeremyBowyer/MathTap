@@ -1,5 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="LightBlue">#39add1</color>
+    <color name="LightBlueTransparent">#8039add1</color>
+
+    <color name="DarkBlue">#3079ab</color>
+    <color name="DarkBlueTransparent">#803079ab</color>
+
+    <color name="Mauve">#c25975</color>
+    <color name="MauveTransparent">#80c25975</color>
+
+    <color name="Red">#e15258</color>
+    <color name="RedTransparent">#80e15258</color>
+
+    <color name="Orange">#f9845b</color>
+    <color name="OrangeTransparent">#80f9845b</color>
+
+    <color name="Lavender">#838cc7</color>
+    <color name="LavenderTransparent">#80838cc7</color>
+
+    <color name="Purple">#7d669e</color>
+    <color name="PurpleTransparent">#807d669e</color>
+
+    <color name="Aqua">#53bbb4</color>
+    <color name="AquaTransparent">#8053bbb4</color>
+
+    <color name="Green">#51b46d</color>
+    <color name="GreenTransparent">#8051b46d</color>
+
+    <color name="Mustard">#e0ab18</color>
+    <color name="MustardTransparent">#80e0ab18</color>
+
+    <color name="DarkGrey">#637a91</color>
+    <color name="DarkGreyTransparent">#80637a91</color>
+
+    <color name="Pink">#637a91</color>
+    <color name="PinkTransparent">#80637a91</color>
+
+    <color name="LightGrey">#b7c0c7</color>
+    <color name="LightGreyTransparent">#80b7c0c7</color>
+
+    <color name="WhiteTransparent">#80ffffff</color>
+    <color name="Black">#000000</color>
+
     <color name="colorPrimary">#3f51b5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>

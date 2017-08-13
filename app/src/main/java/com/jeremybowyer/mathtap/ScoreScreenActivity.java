@@ -15,6 +15,7 @@ public class ScoreScreenActivity extends AppCompatActivity {
     private String mPlayerName;
     private String mTotalPoints;
     private String mRoundsCompleted;
+    private int mThemeId;
 
     @BindView(R.id.roundsCompletedView) TextView mRoundsCompletedView;
     @BindView(R.id.totalPointsView) TextView mTotalPointsView;
@@ -23,13 +24,16 @@ public class ScoreScreenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_score_screen);
-        ButterKnife.bind(this);
 
         Intent intent =  getIntent();
         mPlayerName = intent.getStringExtra("name");
+        mThemeId = intent.getIntExtra("themeid", 0);
         mRoundsCompleted = intent.getStringExtra("rounds");
         mTotalPoints = intent.getStringExtra("points");
+
+        setTheme(mThemeId);
+        setContentView(R.layout.activity_score_screen);
+        ButterKnife.bind(this);
 
         mRoundsCompletedView.setText(mRoundsCompleted);
         mTotalPointsView.setText(mTotalPoints);
@@ -37,8 +41,7 @@ public class ScoreScreenActivity extends AppCompatActivity {
         mPlayAgainButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ScoreScreenActivity.this, MainActivity.class);
-                startActivity(intent);
+                finish();
             }
         });
 

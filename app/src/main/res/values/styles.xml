@@ -6,6 +6,65 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColor">@color/WhiteTransparent</item>
+    </style>
+
+    <style name="HowToTheme" parent="AppTheme">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/colorDarkCharcoal</item>
+        <item name="android:background">@color/LightGrey</item>
+    </style>
+
+    <style name="LightBlue" parent="AppTheme">
+        <item name="android:background">@color/LightBlue</item>
+    </style>
+
+    <style name="DarkBlue" parent="AppTheme">
+        <item name="android:background">@color/DarkBlue</item>
+    </style>
+
+    <style name="Mauve" parent="AppTheme">
+        <item name="android:background">@color/Mauve</item>
+    </style>
+
+    <style name="Red" parent="AppTheme">
+        <item name="android:background">@color/Red</item>
+    </style>
+
+    <style name="Orange" parent="AppTheme">
+        <item name="android:background">@color/Orange</item>
+    </style>
+
+    <style name="Lavender" parent="AppTheme">
+        <item name="android:background">@color/Lavender</item>
+    </style>
+
+    <style name="Purple" parent="AppTheme">
+        <item name="android:background">@color/Purple</item>
+    </style>
+
+    <style name="Aqua" parent="AppTheme">
+        <item name="android:background">@color/Aqua</item>
+    </style>
+
+    <style name="Green" parent="AppTheme">
+        <item name="android:background">@color/Green</item>
+    </style>
+
+    <style name="Mustard" parent="AppTheme">
+        <item name="android:background">@color/Mustard</item>
+    </style>
+
+    <style name="DarkGrey" parent="AppTheme">
+        <item name="android:background">@color/DarkGrey</item>
+    </style>
+
+    <style name="Pink" parent="AppTheme">
+        <item name="android:background">@color/Pink</item>
+    </style>
+
+    <style name="LightGrey" parent="AppTheme">
+        <item name="android:background">@color/LightGrey</item>
     </style>
 
     <style name="HiddenView">

@@ -34,6 +34,7 @@ public class GameActivity extends AppCompatActivity {
     private Equation mEquation;
     private String mPlayerName;
     private int mSuccessfulGuesses = 0;
+    private int mThemeId;
 
     @BindView(R.id.equationView) TextView mEquationView;
 
@@ -60,11 +61,13 @@ public class GameActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent intent =  getIntent();
+        mPlayerName = intent.getStringExtra("name");
+        mThemeId = intent.getIntExtra("themeid", 0);
+        setTheme(mThemeId);
         setContentView(R.layout.activity_game);
         ButterKnife.bind(this);
 
-        Intent intent =  getIntent();
-        mPlayerName = intent.getStringExtra("name");
 
         mButtons.add(mAnswer1);
         mButtons.add(mAnswer2);
@@ -102,7 +105,7 @@ public class GameActivity extends AppCompatActivity {
 
     private void wrongGuess(Button button) {
         mButtonsToRemove.remove(button); // ensure button isn't selected during countdown
-        removeView(button);
+        removeView(button, false);
         takeHit();
     }
 
@@ -124,9 +127,17 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
-    private void removeView(View view) {
-        Animation removeViewAnim = getViewAnimation(view, R.anim.view_disappear, true);
-        view.startAnimation(removeViewAnim);
+    private void removeView(View view, boolean instant) {
+
+        if (instant) {
+            view.setVisibility(View.INVISIBLE);
+            view.setScaleX(0);
+            view.setScaleY(0);
+            view.setAlpha(0);
+        } else{
+            Animation removeViewAnim = getViewAnimation(view, R.anim.view_disappear, true);
+            view.startAnimation(removeViewAnim);
+        }
     }
 
     CountDownTimer removeButtonsClock = new CountDownTimer(22000, 2000) {
@@ -137,7 +148,7 @@ public class GameActivity extends AppCompatActivity {
                 nextRound();
             } else if(millisUntilFinished < 21500){
                 final Button button = mButtonsToRemove.remove(0);
-                removeView(button);
+                removeView(button, false);
                 if (mButtonsToRemove.size() == 1) {
                     takeHit();
                 }
@@ -294,6 +305,7 @@ public class GameActivity extends AppCompatActivity {
         hideViews();
         Intent intent = new Intent(this, ScoreScreenActivity.class);
         intent.putExtra("name", mPlayerName);
+        intent.putExtra("themeid", mThemeId);
         intent.putExtra("points", Integer.toString(mTotalPoints));
         intent.putExtra("rounds", Integer.toString(mSuccessfulGuesses));
         resetStats(true);
@@ -309,8 +321,7 @@ public class GameActivity extends AppCompatActivity {
 
     private void hideViews() {
         for(View view: mGameViews) {
-            view.setVisibility(View.INVISIBLE);
-//            removeView(view);
+            removeView(view, true);
         }
     }
 }
