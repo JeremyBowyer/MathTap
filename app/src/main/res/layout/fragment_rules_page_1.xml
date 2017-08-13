@@ -28,7 +28,7 @@
         android:layout_marginRight="0dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:srcCompat="@drawable/fullview"
+        android:src ="@drawable/fullview"
         app:layout_constraintHorizontal_bias="0.5"
         android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@+id/ruleDescription1View"/>
