@@ -38,6 +38,9 @@ public class GameActivity extends AppCompatActivity {
     private int mSuccessfulGuesses = 0;
     private int mThemeId;
     private CountDownTimer mCountdownClock;
+    private CountDownTimer mPointsCountdownClock;
+    private CountDownTimer mRemoveButtonsClock;
+    private CountDownTimer mLoadViewsClock;
 
     public MediaPlayer wrong_sound;
     public MediaPlayer correct_sound;
@@ -78,6 +81,9 @@ public class GameActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         mCountdownClock = getCountdownClock();
+        mPointsCountdownClock = getPointsCountdownClock();
+        mRemoveButtonsClock = getRemoveButtonsClock();
+        mLoadViewsClock = getLoadViewsClock();
 
         mButtons.add(mAnswer1);
         mButtons.add(mAnswer2);
@@ -191,59 +197,69 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
-    CountDownTimer removeButtonsClock = new CountDownTimer(22000, 2000) {
+    public CountDownTimer getRemoveButtonsClock() {
+        CountDownTimer removeButtonsClock = new CountDownTimer(22000, 2000) {
 
-        @Override
-        public void onTick(long millisUntilFinished) {
-            if (mButtonsToRemove.size() == 1) {
-                nextRound();
-            } else if(millisUntilFinished < 21500){
-                final Button button = mButtonsToRemove.remove(0);
-                removeView(button, false);
+            @Override
+            public void onTick(long millisUntilFinished) {
                 if (mButtonsToRemove.size() == 1) {
-                    takeHit();
+                    nextRound();
+                } else if (millisUntilFinished < 21500) {
+                    final Button button = mButtonsToRemove.remove(0);
+                    removeView(button, false);
+                    if (mButtonsToRemove.size() == 1) {
+                        takeHit();
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFinish() {
+            }
+        };
+        return removeButtonsClock;
+    }
+
+    public CountDownTimer getPointsCountdownClock() {
+        CountDownTimer pointsCountdownClock = new CountDownTimer(16000, 100) {
+
+            public void onTick(long millisUntilFinished) {
+                mBonusPointsView.setText("" + Math.round((millisUntilFinished)) / 16);
+            }
+
+            public void onFinish() {
+                mBonusPointsView.setText("0");
+            }
+
+        };
+        return pointsCountdownClock;
+    }
+
+    public CountDownTimer getLoadViewsClock() {
+        CountDownTimer loadViewsClock = new CountDownTimer(1100, 100) {
+
+            public void onTick(long millisUntilFinished) {
+                if (mGameViews.size() > 0) {
+                    View view = mGameViews.remove(0);
+//                Animation loadViewAnim = getViewAnimation(view, R.anim.view_appear, false);
+//                view.startAnimation(loadViewAnim);
+                    view.setVisibility(View.VISIBLE);
+                    view.animate().alpha(1);
+                    view.animate().scaleX(1);
+                    view.animate().scaleY(1);
                 }
             }
 
-        }
-
-        @Override
-        public void onFinish() {
-        }
-    };
-
-    CountDownTimer pointsCountdownClock = new CountDownTimer(16000, 100) {
-
-        public void onTick(long millisUntilFinished) {
-            mBonusPointsView.setText("" + Math.round((millisUntilFinished)) / 16);
-        }
-
-        public void onFinish() {
-            mBonusPointsView.setText("0");
-        }
-
-    };
-
-    CountDownTimer loadViewsClock = new CountDownTimer(1100, 100) {
-
-        public void onTick(long millisUntilFinished) {
-            if(mGameViews.size() > 0) {
-                View view = mGameViews.remove(0);
-//                Animation loadViewAnim = getViewAnimation(view, R.anim.view_appear, false);
-//                view.startAnimation(loadViewAnim);
-                view.setVisibility(View.VISIBLE);
-                view.animate().alpha(1);
-                view.animate().scaleX(1);
-                view.animate().scaleY(1);
+            public void onFinish() {
+                mPointsCountdownClock.start();
+                mRemoveButtonsClock.start();
             }
-        }
 
-        public void onFinish() {
-            pointsCountdownClock.start();
-            removeButtonsClock.start();
-        }
+        };
 
-    };
+        return loadViewsClock;
+    }
 
     public CountDownTimer getCountdownClock() {
         CountDownTimer countdownClock = new CountDownTimer(4100, 1000) {
@@ -279,7 +295,7 @@ public class GameActivity extends AppCompatActivity {
                 mCountdownTitleView.setVisibility(View.INVISIBLE);
                 mCountdownView.setVisibility(View.INVISIBLE);
                 mCountdownView.setText("4");
-                loadViewsClock.start();
+                mLoadViewsClock.start();
             }
 
         };
@@ -323,14 +339,6 @@ public class GameActivity extends AppCompatActivity {
 
         return viewAnim;
 
-    }
-
-    private Animation getHeartAnimation(ImageView heart) {
-        AnimationListenerHide heartListener = new AnimationListenerHide();
-        heartListener.setView(heart);
-        Animation removeHeartAnim = AnimationUtils.loadAnimation(this, R.anim.remove_heart);
-        removeHeartAnim.setAnimationListener(heartListener);
-        return removeHeartAnim;
     }
 
     private void startRound(int level) {
@@ -385,9 +393,9 @@ public class GameActivity extends AppCompatActivity {
 
     private void clearTimers() {
         mCountdownClock.cancel();
-        loadViewsClock.cancel();
-        pointsCountdownClock.cancel();
-        removeButtonsClock.cancel();
+        mLoadViewsClock.cancel();
+        mPointsCountdownClock.cancel();
+        mRemoveButtonsClock.cancel();
     }
 
     private void hideViews() {
