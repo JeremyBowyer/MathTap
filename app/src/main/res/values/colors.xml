@@ -39,7 +39,7 @@
     <color name="LightGrey">#b7c0c7</color>
     <color name="LightGreyTransparent">#80b7c0c7</color>
 
-    <color name="WhiteTransparent">#80ffffff</color>
+    <color name="WhiteTransparent">#BFffffff</color>
     <color name="Black">#000000</color>
 
     <color name="colorPrimary">#3f51b5</color>

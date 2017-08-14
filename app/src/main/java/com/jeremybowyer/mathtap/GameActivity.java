@@ -1,10 +1,12 @@
 package com.jeremybowyer.mathtap;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -35,6 +37,12 @@ public class GameActivity extends AppCompatActivity {
     private String mPlayerName;
     private int mSuccessfulGuesses = 0;
     private int mThemeId;
+    private CountDownTimer mCountdownClock;
+
+    public MediaPlayer wrong_sound;
+    public MediaPlayer correct_sound;
+    public MediaPlayer countdown_sound;
+    public MediaPlayer countdown_end_sound;
 
     @BindView(R.id.equationView) TextView mEquationView;
 
@@ -58,6 +66,7 @@ public class GameActivity extends AppCompatActivity {
     @BindView(R.id.heart2) ImageView mHeart2;
     @BindView(R.id.heart3) ImageView mHeart3;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +77,7 @@ public class GameActivity extends AppCompatActivity {
         setContentView(R.layout.activity_game);
         ButterKnife.bind(this);
 
+        mCountdownClock = getCountdownClock();
 
         mButtons.add(mAnswer1);
         mButtons.add(mAnswer2);
@@ -97,6 +107,47 @@ public class GameActivity extends AppCompatActivity {
         for(Button button: buttonsClone) {
             button.setText(equation.getWrongAnswer());
         }
+
+        // MP and OnTouchListener for wrong buttons
+        final MediaPlayer wrong_sound = MediaPlayer.create(GameActivity.this, R.raw.wrong_answer);
+        View.OnTouchListener wrongButtonSound = new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch(event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        wrong_sound.start();
+                        return false; // if you want to handle the touch event
+                    case MotionEvent.ACTION_UP:
+                        // RELEASED
+                        return false; // if you want to handle the touch event
+                }
+                return false;
+            }
+        };
+
+        // Mp and OnTouchListenber for correct button
+        final MediaPlayer correct_sound = MediaPlayer.create(GameActivity.this, R.raw.correct_answer);
+        View.OnTouchListener correctButtonSound = new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch(event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        correct_sound.start();
+                        return false; // if you want to handle the touch event
+                    case MotionEvent.ACTION_UP:
+                        // RELEASED
+                        return false; // if you want to handle the touch event
+                }
+                return false;
+            }
+        };
+
+
+        for(Button wrongbtn: buttonsClone){
+            wrongbtn.setOnTouchListener(wrongButtonSound);
+        }
+
+        correctButton.setOnTouchListener(correctButtonSound);
 
         Collections.shuffle(buttonsClone);
         buttonsClone.add(correctButton);
@@ -194,27 +245,47 @@ public class GameActivity extends AppCompatActivity {
 
     };
 
-    CountDownTimer countdownClock = new CountDownTimer(4000, 1000) {
+    public CountDownTimer getCountdownClock() {
+        CountDownTimer countdownClock = new CountDownTimer(4100, 1000) {
+            final MediaPlayer countdown_sound = MediaPlayer.create(GameActivity.this, R.raw.countdown);
+            final MediaPlayer countdown_end_sound = MediaPlayer.create(GameActivity.this, R.raw.countdown_end);
 
-        public void onTick(long millisUntilFinished) {
-            if(millisUntilFinished > 3900){
-                mCountdownTitleView.setVisibility(View.VISIBLE);
-                mCountdownView.setVisibility(View.VISIBLE);
+
+            public void onTick(long millisUntilFinished) {
+                if(countdown_sound.isPlaying() == true){
+                    countdown_sound.stop();
+                }
+                if(countdown_end_sound.isPlaying() == true){
+                    countdown_end_sound.stop();
+                }
+
+
+                Log.v(TAG, Long.toString(millisUntilFinished));
+                if (millisUntilFinished > 3900) {
+                    mCountdownTitleView.setVisibility(View.VISIBLE);
+                    mCountdownView.setVisibility(View.VISIBLE);
+                }
+                if (millisUntilFinished < 2000) {
+                    mCountdownView.setText("GO!");
+                    countdown_end_sound.start();
+                } else {
+                    mCountdownView.setText("" + (int) Math.floor((millisUntilFinished - 1000) / 1000));
+                    mCountdownView.startAnimation(AnimationUtils.loadAnimation(GameActivity.this, R.anim.view_fade_out));
+                    countdown_sound.start();
+                }
             }
 
-            mCountdownView.setText("" + Math.round(millisUntilFinished / 1000));
-            mCountdownView.startAnimation(AnimationUtils.loadAnimation(GameActivity.this, R.anim.view_fade_out));
-        }
+            public void onFinish() {
+                mCountdownTitleView.setVisibility(View.INVISIBLE);
+                mCountdownView.setVisibility(View.INVISIBLE);
+                mCountdownView.setText("4");
+                loadViewsClock.start();
+            }
 
-        public void onFinish() {
-            mCountdownTitleView.setVisibility(View.INVISIBLE);
-            mCountdownView.setVisibility(View.INVISIBLE);
-            mCountdownView.setText("4");
-            loadViewsClock.start();
-        }
+        };
 
-    };
-
+        return countdownClock;
+    }
 
     View.OnClickListener guessButton = new View.OnClickListener() {
         @Override
@@ -275,7 +346,7 @@ public class GameActivity extends AppCompatActivity {
         mEquation = new Equation(level);
         mEquationView.setText(mEquation.getEquation());
         mButtonsToRemove = setButtons(mButtons, mEquation);
-        countdownClock.start();
+        mCountdownClock.start();
     }
 
     private void resetStats(boolean gameover) {
@@ -313,7 +384,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void clearTimers() {
-        countdownClock.cancel();
+        mCountdownClock.cancel();
         loadViewsClock.cancel();
         pointsCountdownClock.cancel();
         removeButtonsClock.cancel();
