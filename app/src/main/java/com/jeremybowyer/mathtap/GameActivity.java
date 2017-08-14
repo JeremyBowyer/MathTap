@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.jeremybowyer.mathtap.model.AnimationListenerHide;
 import com.jeremybowyer.mathtap.model.AnimationListenerShow;
 import com.jeremybowyer.mathtap.model.Equation;
+import com.jeremybowyer.mathtap.model.Player;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,15 +29,13 @@ import butterknife.ButterKnife;
 public class GameActivity extends AppCompatActivity {
     public static final String TAG = GameActivity.class.getSimpleName();
 
-    private int mTotalPoints = 0;
-    private int mHitPoints = 3;
     private ArrayList<Button> mButtons = new ArrayList<>();
     private ArrayList<Button> mButtonsToRemove;
     private ArrayList<View> mGameViews = new ArrayList<>();
     private Equation mEquation;
     private String mPlayerName;
-    private int mSuccessfulGuesses = 0;
     private int mThemeId;
+    private Player player;
     private CountDownTimer mCountdownClock;
     private CountDownTimer mPointsCountdownClock;
     private CountDownTimer mRemoveButtonsClock;
@@ -79,6 +78,9 @@ public class GameActivity extends AppCompatActivity {
         setTheme(mThemeId);
         setContentView(R.layout.activity_game);
         ButterKnife.bind(this);
+
+
+        player = new Player(mPlayerName);
 
         mCountdownClock = getCountdownClock();
         mPointsCountdownClock = getPointsCountdownClock();
@@ -167,7 +169,8 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void takeHit() {
-        switch (mHitPoints) {
+        int currentHp = player.takeHit();
+        switch (currentHp) {
             case 1:
                 mHeart3.setVisibility(View.INVISIBLE);
                 break;
@@ -178,8 +181,7 @@ public class GameActivity extends AppCompatActivity {
                 mHeart1.setVisibility(View.INVISIBLE);
                 break;
         }
-        mHitPoints--;
-        if (mHitPoints == 0) {
+        if (currentHp == 0) {
             endGame();
         }
     }
@@ -275,8 +277,6 @@ public class GameActivity extends AppCompatActivity {
                     countdown_end_sound.stop();
                 }
 
-
-                Log.v(TAG, Long.toString(millisUntilFinished));
                 if (millisUntilFinished > 3900) {
                     mCountdownTitleView.setVisibility(View.VISIBLE);
                     mCountdownView.setVisibility(View.VISIBLE);
@@ -310,9 +310,9 @@ public class GameActivity extends AppCompatActivity {
             String answer = button.getText().toString();
 
             if(mEquation.isAnswer(answer)) {
-                mSuccessfulGuesses++;
-                mTotalPoints += Integer.parseInt(mBonusPointsView.getText().toString());
-                mTotalPointsView.setText(Integer.toString(mTotalPoints));
+                player.addSuccess();
+                player.addPoints(Integer.parseInt(mBonusPointsView.getText().toString()));
+                mTotalPointsView.setText(Integer.toString(player.getPlayerPoints()));
                 mBonusPointsView.setText("0");
                 nextRound();
             } else {
@@ -360,10 +360,8 @@ public class GameActivity extends AppCompatActivity {
     private void resetStats(boolean gameover) {
         mBonusPointsView.setText("1000");
         if(gameover){
-            mTotalPoints = 0;
+            player.resetStats();
             mTotalPointsView.setText("0");
-            mHitPoints = 3;
-            mSuccessfulGuesses = 0;
             mHeart1.setVisibility(View.VISIBLE);
             mHeart2.setVisibility(View.VISIBLE);
             mHeart3.setVisibility(View.VISIBLE);
@@ -383,10 +381,8 @@ public class GameActivity extends AppCompatActivity {
         clearTimers();
         hideViews();
         Intent intent = new Intent(this, ScoreScreenActivity.class);
-        intent.putExtra("name", mPlayerName);
         intent.putExtra("themeid", mThemeId);
-        intent.putExtra("points", Integer.toString(mTotalPoints));
-        intent.putExtra("rounds", Integer.toString(mSuccessfulGuesses));
+        intent.putExtra("playerString", player.getJsonString());
         resetStats(true);
         startActivity(intent);
     }

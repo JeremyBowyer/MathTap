@@ -7,17 +7,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.jeremybowyer.mathtap.model.Player;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class ScoreScreenActivity extends AppCompatActivity {
 
-    private String mPlayerName;
-    private String mTotalPoints;
-    private String mRoundsCompleted;
+    private String mPlayerString;
     private int mThemeId;
 
-    @BindView(R.id.roundsCompletedView) TextView mRoundsCompletedView;
+    @BindView(R.id.roundsCompletedView) TextView mSuccessfulGuesses;
     @BindView(R.id.totalPointsView) TextView mTotalPointsView;
     @BindView(R.id.playAgainButtonView) Button mPlayAgainButton;
 
@@ -26,17 +27,17 @@ public class ScoreScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         Intent intent =  getIntent();
-        mPlayerName = intent.getStringExtra("name");
         mThemeId = intent.getIntExtra("themeid", 0);
-        mRoundsCompleted = intent.getStringExtra("rounds");
-        mTotalPoints = intent.getStringExtra("points");
+        mPlayerString = intent.getStringExtra("playerString");
+        Gson gS = new Gson();
+        Player player = gS.fromJson(mPlayerString, Player.class);
 
         setTheme(mThemeId);
         setContentView(R.layout.activity_score_screen);
         ButterKnife.bind(this);
 
-        mRoundsCompletedView.setText(mRoundsCompleted);
-        mTotalPointsView.setText(mTotalPoints);
+        mSuccessfulGuesses.setText(Integer.toString(player.getSuccessfulGuesses()));
+        mTotalPointsView.setText(Integer.toString(player.getPlayerPoints()));
 
         mPlayAgainButton.setOnClickListener(new View.OnClickListener() {
             @Override
