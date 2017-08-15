@@ -1,5 +1,7 @@
 package com.jeremybowyer.mathtap.model;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 
 public class Player {
@@ -13,7 +15,7 @@ public class Player {
     }
 
     public int takeHit() {
-        return mPlayerHp--;
+        return --mPlayerHp;
     }
 
     public void addSuccess() {

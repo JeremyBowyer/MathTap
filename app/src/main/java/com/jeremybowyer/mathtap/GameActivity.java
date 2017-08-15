@@ -29,13 +29,12 @@ import butterknife.ButterKnife;
 public class GameActivity extends AppCompatActivity {
     public static final String TAG = GameActivity.class.getSimpleName();
 
-    private ArrayList<Button> mButtons = new ArrayList<>();
-    private ArrayList<Button> mButtonsToRemove;
-    private ArrayList<View> mGameViews = new ArrayList<>();
     private Equation mEquation;
+
     private String mPlayerName;
     private int mThemeId;
     private Player player;
+
     private CountDownTimer mCountdownClock;
     private CountDownTimer mPointsCountdownClock;
     private CountDownTimer mRemoveButtonsClock;
@@ -45,6 +44,11 @@ public class GameActivity extends AppCompatActivity {
     public MediaPlayer correct_sound;
     public MediaPlayer countdown_sound;
     public MediaPlayer countdown_end_sound;
+
+
+    private ArrayList<Button> mButtons = new ArrayList<>();
+    private ArrayList<Button> mButtonsToRemove;
+    private ArrayList<View> mGameViews = new ArrayList<>();
 
     @BindView(R.id.equationView) TextView mEquationView;
 
@@ -99,6 +103,12 @@ public class GameActivity extends AppCompatActivity {
 
         startNewGame();
 
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        clearTimers();
     }
 
     private ArrayList<Button> setButtons(ArrayList<Button> buttons, Equation equation) {
@@ -171,13 +181,13 @@ public class GameActivity extends AppCompatActivity {
     private void takeHit() {
         int currentHp = player.takeHit();
         switch (currentHp) {
-            case 1:
+            case 0:
                 mHeart3.setVisibility(View.INVISIBLE);
                 break;
-            case 2:
+            case 1:
                 mHeart2.setVisibility(View.INVISIBLE);
                 break;
-            case 3:
+            case 2:
                 mHeart1.setVisibility(View.INVISIBLE);
                 break;
         }
@@ -270,12 +280,8 @@ public class GameActivity extends AppCompatActivity {
 
 
             public void onTick(long millisUntilFinished) {
-                if(countdown_sound.isPlaying() == true){
-                    countdown_sound.stop();
-                }
-                if(countdown_end_sound.isPlaying() == true){
-                    countdown_end_sound.stop();
-                }
+//                countdown_sound.reset();
+//                countdown_end_sound.reset();
 
                 if (millisUntilFinished > 3900) {
                     mCountdownTitleView.setVisibility(View.VISIBLE);
@@ -283,7 +289,7 @@ public class GameActivity extends AppCompatActivity {
                 }
                 if (millisUntilFinished < 2000) {
                     mCountdownView.setText("GO!");
-                    countdown_end_sound.start();
+//                    countdown_end_sound.start();
                 } else {
                     mCountdownView.setText("" + (int) Math.floor((millisUntilFinished - 1000) / 1000));
                     mCountdownView.startAnimation(AnimationUtils.loadAnimation(GameActivity.this, R.anim.view_fade_out));
