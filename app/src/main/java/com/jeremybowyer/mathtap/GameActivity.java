@@ -40,12 +40,6 @@ public class GameActivity extends AppCompatActivity {
     private CountDownTimer mRemoveButtonsClock;
     private CountDownTimer mLoadViewsClock;
 
-    public MediaPlayer wrong_sound;
-    public MediaPlayer correct_sound;
-    public MediaPlayer countdown_sound;
-    public MediaPlayer countdown_end_sound;
-
-
     private ArrayList<Button> mButtons = new ArrayList<>();
     private ArrayList<Button> mButtonsToRemove;
     private ArrayList<View> mGameViews = new ArrayList<>();
