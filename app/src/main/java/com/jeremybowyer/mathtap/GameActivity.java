@@ -173,7 +173,9 @@ public class GameActivity extends AppCompatActivity {
     private void wrongGuess(Button button) {
         mButtonsToRemove.remove(button); // ensure button isn't selected during countdown
         removeView(button, false);
-        takeHit();
+        if(takeHit() == 0) {
+            endGame();
+        };
     }
 
     private int takeHit() {

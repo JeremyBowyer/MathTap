@@ -9,7 +9,7 @@ public class Player {
     private int mPlayerPoints = 0;
     private int mPlayerHp = 3;
     private int mSuccessfulGuesses = 0;
-    private int mLevel;
+    private int mLevel = 1;
 
     public Player(String name){
         mPlayerName = name;

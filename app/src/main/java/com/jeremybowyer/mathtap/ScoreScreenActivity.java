@@ -19,6 +19,7 @@ public class ScoreScreenActivity extends AppCompatActivity {
     private int mThemeId;
 
     @BindView(R.id.roundsCompletedView) TextView mSuccessfulGuesses;
+    @BindView(R.id.levelReachedView) TextView mLevelReached;
     @BindView(R.id.totalPointsView) TextView mTotalPointsView;
     @BindView(R.id.playAgainButtonView) Button mPlayAgainButton;
 
@@ -37,6 +38,7 @@ public class ScoreScreenActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         mSuccessfulGuesses.setText(Integer.toString(player.getSuccessfulGuesses()));
+        mLevelReached.setText(Integer.toString(player.getLevel()));
         mTotalPointsView.setText(Integer.toString(player.getPlayerPoints()));
 
         mPlayAgainButton.setOnClickListener(new View.OnClickListener() {
