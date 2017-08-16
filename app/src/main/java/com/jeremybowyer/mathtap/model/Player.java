@@ -9,6 +9,7 @@ public class Player {
     private int mPlayerPoints = 0;
     private int mPlayerHp = 3;
     private int mSuccessfulGuesses = 0;
+    private int mLevel;
 
     public Player(String name){
         mPlayerName = name;
@@ -24,6 +25,7 @@ public class Player {
 
     public int addPoints(int points) {
         mPlayerPoints += points;
+        mLevel = (int) Math.floor((mPlayerPoints / 3000) + 1);
         return mPlayerPoints;
     }
 
@@ -70,4 +72,13 @@ public class Player {
     public void setPlayerHp(int playerHp) {
         mPlayerHp = playerHp;
     }
+
+    public int getLevel() {
+        return mLevel;
+    }
+
+    public void setLevel(int level) {
+        mLevel = level;
+    }
+
 }

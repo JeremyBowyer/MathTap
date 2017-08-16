@@ -3,6 +3,7 @@ package com.jeremybowyer.mathtap;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -41,8 +42,11 @@ public class GameActivity extends AppCompatActivity {
     private CountDownTimer mLoadViewsClock;
 
     private ArrayList<Button> mButtons = new ArrayList<>();
+    private ArrayList<Button> mWrongButtons;
     private ArrayList<Button> mButtonsToRemove;
     private ArrayList<View> mGameViews = new ArrayList<>();
+
+    @BindView(R.id.levelTitleView) TextView mLevelTitleView;
 
     @BindView(R.id.equationView) TextView mEquationView;
 
@@ -76,7 +80,6 @@ public class GameActivity extends AppCompatActivity {
         setTheme(mThemeId);
         setContentView(R.layout.activity_game);
         ButterKnife.bind(this);
-
 
         player = new Player(mPlayerName);
 
@@ -161,6 +164,7 @@ public class GameActivity extends AppCompatActivity {
 
         correctButton.setOnTouchListener(correctButtonSound);
 
+        mWrongButtons = (ArrayList<Button>) buttonsClone.clone();
         Collections.shuffle(buttonsClone);
         buttonsClone.add(correctButton);
         return buttonsClone;
@@ -172,7 +176,7 @@ public class GameActivity extends AppCompatActivity {
         takeHit();
     }
 
-    private void takeHit() {
+    private int takeHit() {
         int currentHp = player.takeHit();
         switch (currentHp) {
             case 0:
@@ -185,9 +189,7 @@ public class GameActivity extends AppCompatActivity {
                 mHeart1.setVisibility(View.INVISIBLE);
                 break;
         }
-        if (currentHp == 0) {
-            endGame();
-        }
+        return currentHp;
     }
 
     private void removeView(View view, boolean instant) {
@@ -208,16 +210,18 @@ public class GameActivity extends AppCompatActivity {
 
             @Override
             public void onTick(long millisUntilFinished) {
-                if (mButtonsToRemove.size() == 1) {
-                    nextRound();
+                if (mButtonsToRemove.size() == 2) {
+                    final MediaPlayer wrong_sound = MediaPlayer.create(GameActivity.this, R.raw.wrong_answer);
+                    wrong_sound.start();
+                    if (takeHit() == 0) {
+                        endGame();
+                    } else {
+                        endRound();
+                    }
                 } else if (millisUntilFinished < 21500) {
                     final Button button = mButtonsToRemove.remove(0);
                     removeView(button, false);
-                    if (mButtonsToRemove.size() == 1) {
-                        takeHit();
-                    }
                 }
-
             }
 
             @Override
@@ -270,7 +274,7 @@ public class GameActivity extends AppCompatActivity {
     public CountDownTimer getCountdownClock() {
         CountDownTimer countdownClock = new CountDownTimer(4100, 1000) {
             final MediaPlayer countdown_sound = MediaPlayer.create(GameActivity.this, R.raw.countdown);
-            final MediaPlayer countdown_end_sound = MediaPlayer.create(GameActivity.this, R.raw.countdown_end);
+//            final MediaPlayer countdown_end_sound = MediaPlayer.create(GameActivity.this, R.raw.countdown_end);
 
 
             public void onTick(long millisUntilFinished) {
@@ -282,6 +286,7 @@ public class GameActivity extends AppCompatActivity {
                     mCountdownView.setVisibility(View.VISIBLE);
                 }
                 if (millisUntilFinished < 2000) {
+                    mCountdownTitleView.setVisibility(View.INVISIBLE);
                     mCountdownView.setText("GO!");
 //                    countdown_end_sound.start();
                 } else {
@@ -314,7 +319,7 @@ public class GameActivity extends AppCompatActivity {
                 player.addPoints(Integer.parseInt(mBonusPointsView.getText().toString()));
                 mTotalPointsView.setText(Integer.toString(player.getPlayerPoints()));
                 mBonusPointsView.setText("0");
-                nextRound();
+                endRound();
             } else {
                 wrongGuess(button);
             }
@@ -352,9 +357,49 @@ public class GameActivity extends AppCompatActivity {
         resetStats(false);
         clearTimers();
         mEquation = new Equation(level);
+        mLevelTitleView.setText("Level " + player.getLevel());
         mEquationView.setText(mEquation.getEquation());
         mButtonsToRemove = setButtons(mButtons, mEquation);
         mCountdownClock.start();
+    }
+
+    private void startNewGame() {
+        resetStats(true);
+        startRound(1);
+    }
+
+    private void endRound() {
+        clearTimers();
+        for (Button button : mWrongButtons) {
+            removeView(button, false);
+        }
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startRound(player.getLevel()); // todo: change this to load level based on score.
+            }
+        }, 2000);
+    }
+
+    private void endGame() {
+        clearTimers();
+        for (Button button : mWrongButtons) {
+            removeView(button, false);
+        }
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(GameActivity.this, ScoreScreenActivity.class);
+                intent.putExtra("themeid", mThemeId);
+                intent.putExtra("playerString", player.getJsonString());
+                resetStats(true);
+                startActivity(intent);
+            }
+        }, 2000);
     }
 
     private void resetStats(boolean gameover) {
@@ -366,25 +411,6 @@ public class GameActivity extends AppCompatActivity {
             mHeart2.setVisibility(View.VISIBLE);
             mHeart3.setVisibility(View.VISIBLE);
         }
-    }
-
-    private void startNewGame() {
-        resetStats(true);
-        startRound(1);
-    }
-
-    private void nextRound() {
-        startRound(1); // todo: change this to load level based on score.
-    }
-
-    private void endGame() {
-        clearTimers();
-        hideViews();
-        Intent intent = new Intent(this, ScoreScreenActivity.class);
-        intent.putExtra("themeid", mThemeId);
-        intent.putExtra("playerString", player.getJsonString());
-        resetStats(true);
-        startActivity(intent);
     }
 
     private void clearTimers() {

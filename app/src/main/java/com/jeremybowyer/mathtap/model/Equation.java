@@ -29,6 +29,35 @@ public class Equation {
                     break;
             }
             mEquation = num1 + " " + op + " " + num2;
+        } else if(level == 2) {
+            ops = new ArrayList<String>(Arrays.asList("+", "-"));
+            String op1 = ops.get(r.nextInt(ops.size()));
+            String op2 = ops.get(r.nextInt(ops.size()));
+            int num1 = r.nextInt(101);
+            int num2 = r.nextInt(101);
+            int num3 = r.nextInt(101);
+
+            int answer1 = 0;
+
+            switch (op1) {
+                case "+":
+                    answer1 = num1 + num2;
+                    break;
+                case "-":
+                    answer1 = num1 - num2;
+                    break;
+            }
+
+            switch(op2) {
+                case "+":
+                    mAnswer = Integer.toString(answer1 + num3);
+                    break;
+                case "-":
+                    mAnswer = Integer.toString(answer1 - num3);
+                    break;
+            }
+
+            mEquation = num1 + " " + op1 + " " + num2 + " " + op2 + " " + num3;
         }
     }
 
