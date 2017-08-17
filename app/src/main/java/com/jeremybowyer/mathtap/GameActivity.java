@@ -1,6 +1,7 @@
 package com.jeremybowyer.mathtap;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -29,12 +30,14 @@ import butterknife.ButterKnife;
 
 public class GameActivity extends AppCompatActivity {
     public static final String TAG = GameActivity.class.getSimpleName();
+    public static final String PREFS_NAME = "HighScores";
 
     private Equation mEquation;
 
     private String mPlayerName;
     private int mThemeId;
     private Player player;
+    private int mPlayerTopScore;
 
     private CountDownTimer mCountdownClock;
     private CountDownTimer mPointsCountdownClock;
@@ -212,7 +215,7 @@ public class GameActivity extends AppCompatActivity {
 
             @Override
             public void onTick(long millisUntilFinished) {
-                if (mButtonsToRemove.size() == 2) {
+                if (mButtonsToRemove.size() <= 2) {
                     final MediaPlayer wrong_sound = MediaPlayer.create(GameActivity.this, R.raw.wrong_answer);
                     wrong_sound.start();
                     if (takeHit() == 0) {
@@ -380,7 +383,7 @@ public class GameActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                startRound(player.getLevel()); // todo: change this to load level based on score.
+                startRound(player.getLevel());
             }
         }, 2000);
     }
@@ -390,6 +393,12 @@ public class GameActivity extends AppCompatActivity {
         for (Button button : mWrongButtons) {
             removeView(button, false);
         }
+
+        // Update player's top score
+        SharedPreferences highscores = this.getSharedPreferences(PREFS_NAME, 0);
+        mPlayerTopScore = highscores.getInt(player.getPlayerName(), 0);
+        mPlayerTopScore = Math.max(mPlayerTopScore, player.getPlayerPoints());
+        highscores.edit().putInt(player.getPlayerName(), mPlayerTopScore).apply();
 
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="14sp"
+    android:paddingLeft="14sp"
+    android:paddingRight="14sp"
+    android:paddingTop="14sp"
+    tools:context="com.jeremybowyer.mathtap.ScoreScreenActivity">
+
+    <TextView
+        android:id="@+id/topScoresTitleView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:text="Top Local Scores"
+        android:textColor="@color/WhiteTransparent"
+        android:textSize="36sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/topNameView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="22dp"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/WhiteTransparent"
+        android:textSize="16sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/topScoresTitleView"
+        tools:text="YourName"/>
+
+    <TextView
+        android:id="@+id/topScoreView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="22dp"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/WhiteTransparent"
+        android:textSize="16sp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/topScoresTitleView"
+        tools:text="15000"/>
+
+    <TextView
+        android:id="@+id/topNameView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="22dp"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/WhiteTransparent"
+        android:textSize="16sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/topNameView1"
+        tools:text="YourName"/>
+
+    <TextView
+        android:id="@+id/topScoreView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="22dp"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/WhiteTransparent"
+        android:textSize="16sp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/topScoreView1"
+        tools:text="15000"/>
+
+    <TextView
+        android:id="@+id/topNameView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="22dp"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/WhiteTransparent"
+        android:textSize="16sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/topNameView2"
+        tools:text="YourName"/>
+
+    <TextView
+        android:id="@+id/topScoreView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="22dp"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/WhiteTransparent"
+        android:textSize="16sp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/topScoreView2"
+        tools:text="15000"/>
+
+    <TextView
+        android:id="@+id/topNameView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="22dp"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/WhiteTransparent"
+        android:textSize="16sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/topNameView3"
+        tools:text="YourName"/>
+
+    <TextView
+        android:id="@+id/topScoreView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="22dp"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/WhiteTransparent"
+        android:textSize="16sp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/topScoreView3"
+        tools:text="15000"/>
+
+    <TextView
+        android:id="@+id/topNameView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="22dp"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/WhiteTransparent"
+        android:textSize="16sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/topNameView4"
+        tools:text="YourName"/>
+
+    <TextView
+        android:id="@+id/topScoreView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="22dp"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/WhiteTransparent"
+        android:textSize="16sp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/topScoreView4"
+        tools:text="15000"/>
+
+    <TextView
+        android:id="@+id/yourScoreTitleView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="24dp"
+        android:text="Your Score"
+        android:textColor="@color/WhiteTransparent"
+        android:textSize="48sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/topNameView5"/>
+
+    <TextView
+        android:id="@+id/yourScoreView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="24dp"
+        android:textColor="@color/WhiteTransparent"
+        android:textSize="28sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/yourScoreTitleView"
+        tools:text="14000"/>
+
+</android.support.constraint.ConstraintLayout>
