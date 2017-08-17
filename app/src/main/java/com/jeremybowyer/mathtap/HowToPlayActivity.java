@@ -2,6 +2,7 @@ package com.jeremybowyer.mathtap;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -46,6 +47,34 @@ public class HowToPlayActivity extends FragmentActivity {
                 finish();
             }
         });
+
+//        changePages(); // TODO: 8/16/2017 make this work by canceling the page changes when the user swipes manually
+
+    }
+
+    public void changePages() {
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mPager.setCurrentItem(1);
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mPager.setCurrentItem(2);
+                        final Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                mPager.setCurrentItem(3);
+                            }
+                        }, 3000);
+                    }
+                }, 3000);
+            }
+        }, 3000);
 
     }
 

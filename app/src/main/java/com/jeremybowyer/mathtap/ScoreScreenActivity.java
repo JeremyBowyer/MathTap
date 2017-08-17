@@ -2,6 +2,7 @@ package com.jeremybowyer.mathtap;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -65,6 +66,14 @@ public class ScoreScreenActivity extends FragmentActivity {
                 finish();
             }
         });
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mPager.setCurrentItem(1);
+            }
+        }, 3000);
 
     }
 
