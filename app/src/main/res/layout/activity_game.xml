@@ -262,15 +262,15 @@
         android:id="@+id/totalPointsView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="7dp"
         android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="0dp"
         android:gravity="right"
         android:text="0"
-        android:textSize="32sp"
-        app:layout_constraintBottom_toTopOf="@+id/bonusPointsView"
-        app:layout_constraintLeft_toLeftOf="@+id/plusView"
-        tools:layout_constraintLeft_creator="1"
-        android:layout_marginStart="8dp"/>
+        android:textSize="28sp"
+        app:layout_constraintLeft_toRightOf="@+id/totalPointsTitleView"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_constraintLeft_creator="1"/>
 
 
     <TextView
@@ -297,8 +297,6 @@
         android:textSize="32sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/plusView"
-        app:layout_constraintTop_toBottomOf="@+id/answer1"
-        app:layout_constraintVertical_bias="1.0"
         tools:layout_constraintBottom_creator="1"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintTop_creator="1"
@@ -374,5 +372,16 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Level 1"/>
+
+    <TextView
+        android:id="@+id/totalPointsTitleView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="0dp"
+        android:text="Points:"
+        android:textSize="28sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
 </android.support.constraint.ConstraintLayout>

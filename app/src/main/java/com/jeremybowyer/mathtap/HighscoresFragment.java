@@ -10,8 +10,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.jeremybowyer.mathtap.R;
-import com.jeremybowyer.mathtap.ScoreScreenActivity;
 import com.jeremybowyer.mathtap.model.Player;
 
 import java.util.Collections;
