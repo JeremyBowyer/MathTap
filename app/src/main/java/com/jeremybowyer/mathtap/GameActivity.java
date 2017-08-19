@@ -39,6 +39,8 @@ public class GameActivity extends AppCompatActivity {
     private Player player;
     private int mPlayerTopScore;
 
+    private boolean mRunning = true;
+
     private CountDownTimer mCountdownClock;
     private CountDownTimer mPointsCountdownClock;
     private CountDownTimer mRemoveButtonsClock;
@@ -106,9 +108,16 @@ public class GameActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        mRunning = true;
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         clearTimers();
+        mRunning = false;
     }
 
     private ArrayList<Button> setButtons(ArrayList<Button> buttons, Equation equation) {
@@ -383,7 +392,9 @@ public class GameActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                startRound(player.getLevel());
+                if(mRunning) {
+                    startRound(player.getLevel());
+                }
             }
         }, 2000);
     }

@@ -8,17 +8,25 @@ public class Equation {
 
     private String mEquation;
     private String mAnswer;
+    private int mDeviationRange;
     private ArrayList<String> ops = new ArrayList<String>();
 
     Random r = new Random();
 
     public Equation(int level) {
+        int num1;
+        int num2;
+        int num3;
+        String op1;
+        String op2;
+        String op;
+
         if(level == 1) {
+            
             ops = new ArrayList<String>(Arrays.asList("+", "-"));
-            int opIndex = r.nextInt(ops.size());
-            String op = ops.get(opIndex);
-            int num1 = r.nextInt(101);
-            int num2 = r.nextInt(101);
+            op = ops.get(r.nextInt(ops.size()));
+            num1 = r.nextInt(101);
+            num2 = r.nextInt(101);
 
             switch (op) {
                 case "+":
@@ -29,13 +37,16 @@ public class Equation {
                     break;
             }
             mEquation = num1 + " " + op + " " + num2;
+            mDeviationRange = 21;
+            
         } else if(level == 2) {
+            
             ops = new ArrayList<String>(Arrays.asList("+", "-"));
-            String op1 = ops.get(r.nextInt(ops.size()));
-            String op2 = ops.get(r.nextInt(ops.size()));
-            int num1 = r.nextInt(101);
-            int num2 = r.nextInt(101);
-            int num3 = r.nextInt(101);
+            op1 = ops.get(r.nextInt(ops.size()));
+            op2 = ops.get(r.nextInt(ops.size()));
+            num1 = r.nextInt(101);
+            num2 = r.nextInt(101);
+            num3 = r.nextInt(101);
 
             int answer1 = 0;
 
@@ -47,7 +58,6 @@ public class Equation {
                     answer1 = num1 - num2;
                     break;
             }
-
             switch(op2) {
                 case "+":
                     mAnswer = Integer.toString(answer1 + num3);
@@ -56,8 +66,35 @@ public class Equation {
                     mAnswer = Integer.toString(answer1 - num3);
                     break;
             }
-
             mEquation = num1 + " " + op1 + " " + num2 + " " + op2 + " " + num3;
+            mDeviationRange = 21;
+            
+        } else if(level == 3) {
+
+            num1 = r.nextInt(21);
+            num2 = r.nextInt(21);
+            mAnswer = Integer.toString(num1 * num2);
+            mEquation = num1 + " * " + num2;
+            mDeviationRange = 21;
+
+        } else if(level == 4) {
+
+            num1 = r.nextInt(11);
+            num2 = r.nextInt(11) + 1;
+            num1 = num1 * num2;
+            mAnswer = Integer.toString(num1 / num2);
+            mEquation = num1 + " / " + num2;
+            mDeviationRange = 21;
+
+        } else if (level >= 5) {
+
+            num1 = r.nextInt(91);
+            num2 = r.nextInt(11) + 2;
+            num1 += num2;
+            mAnswer = Integer.toString(num1 % num2);
+            mEquation = num1 + " % " + num2;
+            mDeviationRange = 21;
+
         }
     }
 
@@ -68,7 +105,7 @@ public class Equation {
     public String getWrongAnswer() {
         int deviation = 0;
         do {
-            deviation = r.nextInt(21) - 10;
+            deviation = r.nextInt(mDeviationRange) - ((mDeviationRange-1) / 2);
         } while (deviation == 0);
 
         int wrongAnswerInt = Integer.parseInt(mAnswer) + deviation;

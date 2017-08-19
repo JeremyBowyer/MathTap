@@ -29,6 +29,7 @@ public class HowToPlayActivity extends FragmentActivity {
 
     @BindView(R.id.goBackButton) Button mBackButton;
     @BindView(R.id.pager) ViewPager mPager;
+    private boolean mAutoSwipe = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +49,17 @@ public class HowToPlayActivity extends FragmentActivity {
             }
         });
 
-//        changePages(); // TODO: 8/16/2017 make this work by canceling the page changes when the user swipes manually
+        mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            public void onPageScrollStateChanged(int state) {}
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            public void onPageSelected(int position) {
+                mAutoSwipe = false;
+            }
+        });
+
+        changePages();
 
     }
 
@@ -58,23 +69,32 @@ public class HowToPlayActivity extends FragmentActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                mPager.setCurrentItem(1);
-                final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        mPager.setCurrentItem(2);
-                        final Handler handler = new Handler();
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                mPager.setCurrentItem(3);
+                if(mAutoSwipe) {
+                    mPager.setCurrentItem(1);
+                    mAutoSwipe = true;
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(mAutoSwipe) {
+                                mPager.setCurrentItem(2);
+                                mAutoSwipe = true;
+                                final Handler handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if(mAutoSwipe) {
+                                            mPager.setCurrentItem(3);
+                                            mAutoSwipe = true;
+                                        }
+                                    }
+                                }, 5000);
                             }
-                        }, 3000);
-                    }
-                }, 3000);
+                        }
+                    }, 5000);
+                }
             }
-        }, 3000);
+        }, 5000);
 
     }
 

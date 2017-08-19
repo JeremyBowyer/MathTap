@@ -1,8 +1,7 @@
 <resources>
     <string name="app_name">Math Tap</string>
-    <string name="level5Description">Modulo, 2 numbers</string>
-    <string name="level4Description">* and /, 3 numbers</string>
-    <string name="level3Description">* and /, 2 numbers</string>
-    <string name="level2Description">+ and -, 3 numbers</string>
-    <string name="level1Description">+ and -, 2 numbers</string>
+    <string name="level5Description">Modulo (remainder)</string>
+    <string name="level4Description">Division</string>
+    <string name="level3Description">Multiplication</string>
+    <string name="level1Description">Addition and Subtraction</string>
 </resources>
