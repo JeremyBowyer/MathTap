@@ -142,6 +142,13 @@ public class GameActivity extends AppCompatActivity {
                 switch(event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         wrong_sound.start();
+                        final Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                wrong_sound.release();
+                            }
+                        }, 2000);
                         return false; // if you want to handle the touch event
                     case MotionEvent.ACTION_UP:
                         // RELEASED
@@ -159,6 +166,13 @@ public class GameActivity extends AppCompatActivity {
                 switch(event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         correct_sound.start();
+                        final Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                correct_sound.release();
+                            }
+                        }, 2000);
                         return false; // if you want to handle the touch event
                     case MotionEvent.ACTION_UP:
                         // RELEASED
