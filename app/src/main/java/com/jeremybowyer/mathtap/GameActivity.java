@@ -35,7 +35,8 @@ public class GameActivity extends AppCompatActivity {
 
     private String mPlayerName;
     private int mThemeId;
-    private Player player;
+    private Player mPlayer;
+    private int mLevel;
     private int mPlayerTopScore;
 
     private boolean mRunning = true;
@@ -85,12 +86,8 @@ public class GameActivity extends AppCompatActivity {
         setContentView(R.layout.activity_game);
         ButterKnife.bind(this);
 
-        player = new Player(mPlayerName);
-
-        mCountdownClock = getCountdownClock();
-        mPointsCountdownClock = getPointsCountdownClock();
-        mRemoveButtonsClock = getRemoveButtonsClock();
-        mLoadViewsClock = getLoadViewsClock();
+        mPlayer = new Player(mPlayerName);
+        mLevel = mPlayer.getLevel();
 
         mButtons.add(mAnswer1);
         mButtons.add(mAnswer2);
@@ -142,13 +139,6 @@ public class GameActivity extends AppCompatActivity {
                 switch(event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         wrong_sound.start();
-                        final Handler handler = new Handler();
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                wrong_sound.release();
-                            }
-                        }, 2000);
                         return false; // if you want to handle the touch event
                     case MotionEvent.ACTION_UP:
                         // RELEASED
@@ -204,7 +194,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private int takeHit() {
-        int currentHp = player.takeHit();
+        int currentHp = mPlayer.takeHit();
         switch (currentHp) {
             case 0:
                 mHeart3.setVisibility(View.INVISIBLE);
@@ -258,11 +248,11 @@ public class GameActivity extends AppCompatActivity {
         return removeButtonsClock;
     }
 
-    public CountDownTimer getPointsCountdownClock() {
+    public CountDownTimer getPointsCountdownClock(final int level) {
         CountDownTimer pointsCountdownClock = new CountDownTimer(16000, 100) {
 
             public void onTick(long millisUntilFinished) {
-                mBonusPointsView.setText("" + Math.round((millisUntilFinished)) / 16);
+                mBonusPointsView.setText("" + ((Math.round((millisUntilFinished)) / 16) + (level * 100)));
             }
 
             public void onFinish() {
@@ -328,6 +318,13 @@ public class GameActivity extends AppCompatActivity {
                 mCountdownView.setVisibility(View.INVISIBLE);
                 mCountdownView.setText("4");
                 mLoadViewsClock.start();
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        countdown_sound.release();
+                    }
+                }, 1000);
             }
 
         };
@@ -342,9 +339,9 @@ public class GameActivity extends AppCompatActivity {
             String answer = button.getText().toString();
 
             if(mEquation.isAnswer(answer)) {
-                player.addSuccess();
-                player.addPoints(Integer.parseInt(mBonusPointsView.getText().toString()));
-                mTotalPointsView.setText(Integer.toString(player.getPlayerPoints()));
+                mPlayer.addSuccess();
+                mPlayer.addPoints(Integer.parseInt(mBonusPointsView.getText().toString()));
+                mTotalPointsView.setText(Integer.toString(mPlayer.getPlayerPoints()));
                 mBonusPointsView.setText("0");
                 endRound();
             } else {
@@ -374,6 +371,12 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void startRound(int level) {
+
+        mCountdownClock = getCountdownClock();
+        mPointsCountdownClock = getPointsCountdownClock(level);
+        mRemoveButtonsClock = getRemoveButtonsClock();
+        mLoadViewsClock = getLoadViewsClock();
+
         mGameViews.clear();
         mGameViews.add(mEquationView);
         for (Button button: mButtons) {
@@ -384,7 +387,7 @@ public class GameActivity extends AppCompatActivity {
         resetStats(false);
         clearTimers();
         mEquation = new Equation(level);
-        mLevelTitleView.setText("Level " + player.getLevel());
+        mLevelTitleView.setText("Level " + mPlayer.getLevel());
         mEquationView.setText(mEquation.getEquation());
         mButtonsToRemove = setButtons(mButtons, mEquation);
         mCountdownClock.start();
@@ -406,7 +409,7 @@ public class GameActivity extends AppCompatActivity {
             @Override
             public void run() {
                 if(mRunning) {
-                    startRound(player.getLevel());
+                    startRound(mPlayer.getLevel());
                 }
             }
         }, 2000);
@@ -418,11 +421,11 @@ public class GameActivity extends AppCompatActivity {
             removeView(button, false);
         }
 
-        // Update player's top score
+        // Update mPlayer's top score
         SharedPreferences highscores = this.getSharedPreferences(PREFS_NAME, 0);
-        mPlayerTopScore = highscores.getInt(player.getPlayerName(), 0);
-        mPlayerTopScore = Math.max(mPlayerTopScore, player.getPlayerPoints());
-        highscores.edit().putInt(player.getPlayerName(), mPlayerTopScore).apply();
+        mPlayerTopScore = highscores.getInt(mPlayer.getPlayerName(), 0);
+        mPlayerTopScore = Math.max(mPlayerTopScore, mPlayer.getPlayerPoints());
+        highscores.edit().putInt(mPlayer.getPlayerName(), mPlayerTopScore).apply();
 
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -430,7 +433,7 @@ public class GameActivity extends AppCompatActivity {
             public void run() {
                 Intent intent = new Intent(GameActivity.this, ScoreScreenActivity.class);
                 intent.putExtra("themeid", mThemeId);
-                intent.putExtra("playerString", player.getJsonString());
+                intent.putExtra("playerString", mPlayer.getJsonString());
                 resetStats(true);
                 startActivity(intent);
             }
@@ -438,9 +441,9 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void resetStats(boolean gameover) {
-        mBonusPointsView.setText("1000");
+        mBonusPointsView.setText(Integer.toString((mPlayer.getLevel() * 100) + 1000));
         if(gameover){
-            player.resetStats();
+            mPlayer.resetStats();
             mTotalPointsView.setText("0");
             mHeart1.setVisibility(View.VISIBLE);
             mHeart2.setVisibility(View.VISIBLE);

@@ -16,7 +16,7 @@ import butterknife.ButterKnife;
 
 public class HowToPlayActivity extends FragmentActivity {
 
-    private static final int NUM_PAGES = 4;
+    private static final int NUM_PAGES = 3;
 
     private PagerAdapter mPagerAdapter;
 
@@ -74,16 +74,6 @@ public class HowToPlayActivity extends FragmentActivity {
                             if(mAutoSwipe) {
                                 mPager.setCurrentItem(2);
                                 mAutoSwipe = true;
-                                final Handler handler = new Handler();
-                                handler.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if(mAutoSwipe) {
-                                            mPager.setCurrentItem(3);
-                                            mAutoSwipe = true;
-                                        }
-                                    }
-                                }, 5000);
                             }
                         }
                     }, 5000);
@@ -119,8 +109,6 @@ public class HowToPlayActivity extends FragmentActivity {
                     return new Rules2Fragment();
                 case 2:
                     return new Rules3Fragment();
-                case 3:
-                    return new LevelDescriptionsFragment();
             }
 
             return null;

@@ -40,7 +40,24 @@ public class Equation {
             mDeviationRange = 21;
             
         } else if(level == 2) {
-            
+
+            num1 = r.nextInt(41) - 20;
+            num2 = r.nextInt(41) - 20;
+            mAnswer = Integer.toString(num1 * num2);
+            mEquation = num1 + " * " + num2;
+            mDeviationRange = 21;
+
+        } else if(level == 3) {
+
+            num1 = r.nextInt(11);
+            num2 = r.nextInt(11) + 1;
+            num1 = num1 * num2;
+            mAnswer = Integer.toString(num1 / num2);
+            mEquation = num1 + " / " + num2;
+            mDeviationRange = 21;
+
+        } else if(level == 4) {
+
             ops = new ArrayList<String>(Arrays.asList("+", "-"));
             op1 = ops.get(r.nextInt(ops.size()));
             op2 = ops.get(r.nextInt(ops.size()));
@@ -68,31 +85,17 @@ public class Equation {
             }
             mEquation = num1 + " " + op1 + " " + num2 + " " + op2 + " " + num3;
             mDeviationRange = 21;
-            
-        } else if(level == 3) {
 
-            num1 = r.nextInt(21);
-            num2 = r.nextInt(21);
-            mAnswer = Integer.toString(num1 * num2);
-            mEquation = num1 + " * " + num2;
-            mDeviationRange = 21;
-
-        } else if(level == 4) {
-
-            num1 = r.nextInt(11);
-            num2 = r.nextInt(11) + 1;
-            num1 = num1 * num2;
-            mAnswer = Integer.toString(num1 / num2);
-            mEquation = num1 + " / " + num2;
-            mDeviationRange = 21;
 
         } else if (level >= 5) {
 
-            num1 = r.nextInt(91);
-            num2 = r.nextInt(11) + 2;
-            num1 += num2;
-            mAnswer = Integer.toString(num1 % num2);
-            mEquation = num1 + " % " + num2;
+            num1 = r.nextInt(21) - 10;
+            do {
+                num3 = r.nextInt(11) - 5;
+            } while (num3 == 0);
+            num2 = num3 * 2;
+            mAnswer = Integer.toString(num1 * num2 / num3);
+            mEquation = num1 + " * " + num2 + " / " + num3;
             mDeviationRange = 21;
 
         }
